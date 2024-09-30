@@ -1,0 +1,165 @@
+---
+title: "Зарплатная аналитика по вакансиям и резюме"
+format: 
+    dashboard:
+        orientation: columns
+        theme: yeti
+css: styles.css
+---
+
+**Источники данных:** hh.ru \
+**Регионы:** Россия. \
+**Дата:** Сентябрь 2024 г.
+
+# Product Designer
+
+## Column
+
+```{r}
+#| warning: false
+#| echo: false
+library(tidyverse)
+library(plotly)
+library(paletteer)
+library(kableExtra)
+
+resume_a <- read_csv("Product_Designer_Resume_09.2024.csv")
+middle_a <- read_csv("Product_Designer_Vacancy_Middle_09.2024.csv")
+senior_a <- read_csv("Product_Designer_Vacancy_Senior_09.2024.csv")
+
+```
+
+```{r}
+resume_a1 <- resume_a |> 
+  select("Middle", "Senior")
+
+resume_a1 <- gather(resume_a1)
+
+p1 <- ggplot(resume_a1, mapping = aes(key, value, color = key)) +
+  theme(plot.title = element_text(hjust=0.5, face="bold")) +
+  geom_boxplot() +
+  geom_jitter(size=0.5, position=position_jitter(0.3)) +
+  facet_grid() +
+  scale_color_paletteer_d("PrettyCols::Bold") +
+  ggtitle('Резюме') +
+  labs(x = " ") +
+  labs(y = " ") +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal() +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust=0.5, face="bold")) +
+  theme(legend.title = element_text(colour="white"))
+
+ggplotly(p1)
+
+```
+
+### Row {.tabset}
+
+```{r}
+#| warning: false
+#| echo: false
+#| title: Статистика
+resume_a2 <- drop_na(resume_a, Middle, Senior)
+knitr::kable(head(summary(resume_a2[2:3]))) %>%
+    column_spec(2, color = "#6396b0") %>%
+    column_spec(3, color = "#6a359c") %>%
+    row_spec(5, bold = TRUE, color = "#000000")
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| title: Количество данных
+a2 <- colSums(!is.na(resume_a[2]))
+a3 <- colSums(!is.na(resume_a[3]))
+a5 <- sum(resume_a$Офис, na.rm = T)
+a6 <- sum(resume_a$Удалённо, na.rm = T)
+a7 <- sum(resume_a$Гибрид, na.rm = T)
+
+a <- tibble("Middle" = a2, "Senior" = a3, "Офис" = a5, "Удалённо" = a6, "Гибрид" = a7)
+
+knitr::kable(a)
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| title: Данные
+knitr::kable(resume_a) |>
+    kableExtra::scroll_box(height = "350px")
+```
+
+## Column
+
+```{r}
+
+m1 <- gather(middle_a[ ,1])
+s1 <- gather(senior_a[ ,1])
+
+m1$key <- paste0("Middle")
+s1$key <- paste0("Senior")
+
+q2 <- rbind2(m1, s1, by="key", all.x=T, sort=F)
+
+p <- ggplot(q2, mapping = aes(key, value, color = key)) +
+  geom_boxplot() +
+  geom_jitter(size=0.5, position=position_jitter(0.3)) +
+  facet_grid() +
+  scale_color_paletteer_d("PrettyCols::Bold") +
+  ggtitle('Вакансии')+
+  labs(x = " ") +
+  labs(y = " ") +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal() +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust=0.5, face="bold")) +
+  theme(legend.title = element_text(colour="white"))
+
+ggplotly(p)
+
+```
+
+### Row {.tabset}
+
+```{r}
+#| warning: false
+#| echo: false
+#| title: Статистика
+
+m <- summary(m1[2])
+s <- summary(s1[2])
+
+vac <- tibble("Middle" = m, "Senior" = s)
+
+knitr::kable(vac) %>%
+    column_spec(1, color = "#6497b1") %>%
+    column_spec(2, color = "#6a359c") %>%
+    row_spec(5, bold = TRUE, color = "#000000")
+
+```
+
+::: {.card title="Количество данных"}
+
+|    | Зарплата | ДМС | Обучение | Фитнес |
+|:--:|:--------:|:---:|:--------:|:------:|
+| Middle | 33 | 4 | 5 | 2 |
+| Senior | 27 | 4 | 5 | 1 |
+
+:::
+
+```{r}
+#| warning: false
+#| echo: false
+#| title: Middle
+knitr::kable(middle_a) |>
+    kableExtra::scroll_box(height = "350px")
+```
+
+```{r}
+#| warning: false
+#| echo: false
+#| title: Senior
+knitr::kable(senior_a) |>
+    kableExtra::scroll_box(height = "350px")
+```

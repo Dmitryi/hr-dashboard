@@ -1,0 +1,10 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "HR Analytics"
+
+format:
+  dashboard:
+    theme: litera

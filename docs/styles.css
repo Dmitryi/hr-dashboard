@@ -1,0 +1,19 @@
+/* css styles */
+
+.quarto-dashboard {
+height: auto;
+}
+
+.card {
+--bs-card-cap-bg: #ffffff;
+}
+
+.navbar-nav .nav-link.active {
+	color: #ff3636;
+	font-weight: bold;
+	border-bottom: 2px solid;
+}
+
+.quarto-dashboard #quarto-dashboard-header .navbar .navbar-nav .active {
+	background-color: #ffffff;
+}

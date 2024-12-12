@@ -9,9 +9,9 @@ css: styles.css
 
 **Источники данных:** hh.ru \
 **Регионы:** Россия. \
-**Дата:** Сентябрь 2024 г.
+**Дата:** Декабрь 2024 г.
 
-# Product Designer
+# Специалист по поддержке
 
 ## Column
 
@@ -23,15 +23,16 @@ library(plotly)
 library(paletteer)
 library(kableExtra)
 
-resume_a <- read_csv("Product_Designer_Resume_09.2024.csv")
-middle_a <- read_csv("Product_Designer_Vacancy_Middle_09.2024.csv")
-senior_a <- read_csv("Product_Designer_Vacancy_Senior_09.2024.csv")
+resume_a <- read_csv("Support_Resume_12.2024.csv")
+junior_a <- read_csv("Support_Vacancy_Junior_12.2024.csv")
+middle_a <- read_csv("Support_Vacancy_Middle_12.2024.csv")
+senior_a <- read_csv("Support_Vacancy_Senior_12.2024.csv")
 
 ```
 
 ```{r}
 resume_a1 <- resume_a |> 
-  select("Middle", "Senior")
+  select("Junior", "Middle", "Senior")
 
 resume_a1 <- gather(resume_a1)
 
@@ -61,9 +62,10 @@ ggplotly(p1)
 #| echo: false
 #| title: Статистика
 resume_a2 <- drop_na(resume_a, Middle, Senior)
-knitr::kable(head(summary(resume_a2[2:3]))) %>%
+knitr::kable(head(summary(resume_a2[1:3]))) %>%
     column_spec(2, color = "#6396b0") %>%
     column_spec(3, color = "#6a359c") %>%
+    column_spec(4, color = "#ffb04f") %>%
     row_spec(5, bold = TRUE, color = "#000000")
 ```
 
@@ -71,13 +73,14 @@ knitr::kable(head(summary(resume_a2[2:3]))) %>%
 #| warning: false
 #| echo: false
 #| title: Количество данных
+a1 <- colSums(!is.na(resume_a[1]))
 a2 <- colSums(!is.na(resume_a[2]))
 a3 <- colSums(!is.na(resume_a[3]))
 a5 <- sum(resume_a$Офис, na.rm = T)
 a6 <- sum(resume_a$Удалённо, na.rm = T)
 a7 <- sum(resume_a$Гибрид, na.rm = T)
 
-a <- tibble("Middle" = a2, "Senior" = a3, "Офис" = a5, "Удалённо" = a6, "Гибрид" = a7)
+a <- tibble("Junior" = a1, "Middle" = a2, "Senior" = a3, "Офис" = a5, "Удалённо" = a6, "Гибрид" = a7)
 
 knitr::kable(a)
 ```
@@ -94,13 +97,16 @@ knitr::kable(resume_a) |>
 
 ```{r}
 
+j1 <- gather(junior_a[ ,1])
 m1 <- gather(middle_a[ ,1])
 s1 <- gather(senior_a[ ,1])
 
+j1$key <- paste0("Junior")
 m1$key <- paste0("Middle")
 s1$key <- paste0("Senior")
 
-q2 <- rbind2(m1, s1, by="key", all.x=T, sort=F)
+q1 <- rbind2(j1, m1, by="key", all.x=T, sort=F)
+q2 <- rbind2(q1, s1, by="key", all.x=T, sort=F)
 
 p <- ggplot(q2, mapping = aes(key, value, color = key)) +
   geom_boxplot() +
@@ -127,14 +133,16 @@ ggplotly(p)
 #| echo: false
 #| title: Статистика
 
+j <- summary(j1[2])
 m <- summary(m1[2])
 s <- summary(s1[2])
 
-vac <- tibble("Middle" = m, "Senior" = s)
+vac <- tibble("Junior" = j, "Middle" = m, "Senior" = s)
 
 knitr::kable(vac) %>%
     column_spec(1, color = "#6497b1") %>%
     column_spec(2, color = "#6a359c") %>%
+    column_spec(3, color = "#ffb04f") %>%
     row_spec(5, bold = TRUE, color = "#000000")
 
 ```
@@ -143,8 +151,9 @@ knitr::kable(vac) %>%
 
 |    | Зарплата | ДМС | Обучение | Фитнес |
 |:--:|:--------:|:---:|:--------:|:------:|
-| Middle | 33 | 4 | 5 | 2 |
-| Senior | 27 | 4 | 5 | 1 |
+| Junion | 26 | 4 | 16 | 2 |
+| Middle | 21 | 3 | 10 | 4 |
+| Senior | 3 | 0 | 1 | 0 |
 
 :::
 

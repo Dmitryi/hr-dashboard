@@ -18,3 +18,12 @@ height: auto;
 	background-color: white;
 	color: black;
 }
+
+.quarto-dashboard #quarto-dashboard-header .navbar .navbar-container {
+	background-color: white;
+	color: black;
+}
+
+.quarto-dashboard #quarto-dashboard-header .navbar.slim .navbar-nav .nav-link {
+	background-color: white;
+}

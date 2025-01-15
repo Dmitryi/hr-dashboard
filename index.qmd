@@ -160,6 +160,13 @@ knitr::kable(vac) %>%
 ```{r}
 #| warning: false
 #| echo: false
+#| title: Junior
+knitr::kable(junior_a) |>
+    kableExtra::scroll_box(height = "350px")
+
+```{r}
+#| warning: false
+#| echo: false
 #| title: Middle
 knitr::kable(middle_a) |>
     kableExtra::scroll_box(height = "350px")
